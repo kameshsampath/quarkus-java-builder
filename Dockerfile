@@ -1,4 +1,4 @@
-FROM centos:7
+FROM fabric8/java-jboss-openjdk8-jdk:1.5.2
 
 ARG MAVEN_VERSION=3.6.0
 ARG GRAAL_VM_VERSION=1.0.0-rc10
@@ -7,9 +7,6 @@ ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRA
 ARG INSTALL_PKGS="bzip2-devel gcc-c++ libcurl-devel openssl-devel tar unzip bc which lsof gzip"
 
 USER root
-
-RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s /sbin/nologin -c "JBoss user" jboss && \
-    chmod 755 /opt/jboss
 
 RUN yum -y update \
     && yum install -y --enablerepo=centosplus $INSTALL_PKGS \
@@ -21,11 +18,11 @@ RUN yum -y update \
     && mkdir -p /opt/graalvm  \
     && curl -fsSL -o /tmp/graalvm-ce-amd64.tar.gz ${GRAAL_VM_BASE_URL}/graalvm-ce-${GRAAL_VM_VERSION}-linux-amd64.tar.gz \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
-    && yum clean all
+    && yum clean all \
+    && rm -rf /var/cache/yum
 
 USER jboss
 
-ENV JAVA_HOME /opt/graalvm
 ENV M2_HOME /opt/maven
 ENV GRAALVM_HOME /opt/graalvm
 
