@@ -1,12 +1,13 @@
-FROM centos
+FROM fabric8/java-jboss-openjdk8-jdk:1.5.2
 
 ARG MAVEN_VERSION=3.5.0
 ARG GRAAL_VM_VERSION=1.0.0-rc10
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
 
+USER root
+
 RUN yum -y update \
-    && yum -y install curl wget java-1.8.0-openjdk java-1.8.0-openjdk-devel \
     && mkdir -p /opt/maven \
     && curl -fsSL -o /tmp/apache-maven.tar.gz ${MAVEN_BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz \
     && tar -xzf /tmp/apache-maven.tar.gz -C /opt/maven --strip-components=1 \
@@ -17,8 +18,9 @@ RUN yum -y update \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
     && yum clean all
 
-ENV JAVA_HOME /usr/lib/jvm/java-openjdk
+USER jboss
+
 ENV M2_HOME /opt/maven
 ENV GRAALVM_HOME /opt/graalvm
 
-ENTRYPOINT ["mvn"]
+CMD ["mvn"]
