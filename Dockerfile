@@ -23,4 +23,6 @@ USER jboss
 ENV M2_HOME /opt/maven
 ENV GRAALVM_HOME /opt/graalvm
 
+VOLUME ["/home/jboss/.m2"]
+
 ENTRYPOINT [ "mvn" ]
