@@ -1,6 +1,6 @@
 FROM fabric8/java-jboss-openjdk8-jdk:1.5.2
 
-ARG MAVEN_VERSION=3.5.0
+ARG MAVEN_VERSION=3.6.0
 ARG GRAAL_VM_VERSION=1.0.0-rc10
 ARG MAVEN_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG GRAAL_VM_BASE_URL=https://github.com/oracle/graal/releases/download/vm-${GRAAL_VM_VERSION}
