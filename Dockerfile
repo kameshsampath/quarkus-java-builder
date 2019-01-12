@@ -23,4 +23,4 @@ USER jboss
 ENV M2_HOME /opt/maven
 ENV GRAALVM_HOME /opt/graalvm
 
-CMD ["mvn"]
+ENTRYPOINT [ "mvn" ]
