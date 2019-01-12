@@ -16,14 +16,11 @@ RUN yum -y update \
     && mkdir -p /opt/graalvm  \
     && curl -fsSL -o /tmp/graalvm-ce-amd64.tar.gz ${GRAAL_VM_BASE_URL}/graalvm-ce-${GRAAL_VM_VERSION}-linux-amd64.tar.gz \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C /opt/graalvm --strip-components=1  \
-    && mkdir -p /opt/jboss/.m2 \
     && yum clean all
 
 USER jboss
 
 ENV M2_HOME /opt/maven
 ENV GRAALVM_HOME /opt/graalvm
-
-VOLUME ["/opt/jboss/.m2"]
 
 ENTRYPOINT [ "mvn" ]
