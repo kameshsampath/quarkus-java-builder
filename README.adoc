@@ -1,0 +1,9 @@
+= Buildah Java
+
+This repository holds the Dockerfile for build Java applications container images using https://buildah.io/[buildah].  The container builder image is available in https://quay.io/repository/workspace7/buildah[quay.io/workspace7/buildah].
+
+NOTE: The scripts are still work in progress, please expect some changes
+
+== Building Container
+
+Please feel free to modify the link:./build-app-container.sh[build-app-container.sh]
