@@ -33,6 +33,7 @@ copy_reference_files() {
 }
 
 function configure_proxy() {
+  echo "Checking and Setting  Maven Proxies"
   if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]; then
     xml="<proxy>\
          <id>genproxy</id>\
@@ -51,19 +52,20 @@ function configure_proxy() {
     fi
   xml="$xml\
        </proxy>"
-    sed -i "s|<!-- ### configured http proxy ### -->|$xml|" $HOME/.m2/settings.xml
+    sed -i "s|<!-- ### configured http proxy ### -->|$xml|" $MAVEN_CONFIG/settings-docker.xml
   fi
 }
 
 # insert settings for mirrors/repository managers into settings.xml if supplied
 function configure_mirrors() {
+  echo "Checking and Setting  Maven mirrors"
   if [ -n "$MAVEN_MIRROR_URL" ]; then
     xml="    <mirror>\
       <id>mirror.default</id>\
       <url>$MAVEN_MIRROR_URL</url>\
       <mirrorOf>external:*</mirrorOf>\
     </mirror>"
-    sed -i "s|<!-- ### configured mirrors ### -->|$xml|" $HOME/.m2/settings.xml
+    sed -i "s|<!-- ### configured mirrors ### -->|$xml|" $MAVEN_CONFIG/settings-docker.xml
   fi
 }
 
