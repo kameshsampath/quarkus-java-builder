@@ -31,5 +31,5 @@ ENV GRAALVM_HOME /opt/graalvm
 COPY entrypoint-run.sh /usr/local/bin/entrypoint-run.sh
 COPY settings-docker.xml /usr/share/maven/ref
 
-ENTRYPOINT [ "/usr/local/bin/run.sh" ]
+ENTRYPOINT [ "/usr/local/bin/entrypoint-run.sh" ]
 CMD [ "mvn" ]
