@@ -29,7 +29,7 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV GRAALVM_HOME /opt/graalvm
 
 COPY entrypoint-run.sh /usr/local/bin/entrypoint-run.sh
-COPY settings-docker.xml /usr/share/maven/ref
+COPY settings.xml /usr/share/maven/ref
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint-run.sh" ]
 CMD [ "mvn" ]

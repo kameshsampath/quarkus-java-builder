@@ -52,7 +52,7 @@ function configure_proxy() {
     fi
   xml="$xml\
        </proxy>"
-    sed -i "s|<!-- ### configured http proxy ### -->|$xml|" $MAVEN_CONFIG/settings-docker.xml
+    sed -i "s|<!-- ### configured http proxy ### -->|$xml|" $MAVEN_CONFIG/settings.xml
   fi
 }
 
@@ -65,7 +65,7 @@ function configure_mirrors() {
       <url>$MAVEN_MIRROR_URL</url>\
       <mirrorOf>external:*</mirrorOf>\
     </mirror>"
-    sed -i "s|<!-- ### configured mirrors ### -->|$xml|" $MAVEN_CONFIG/settings-docker.xml
+    sed -i "s|<!-- ### configured mirrors ### -->|$xml|" $MAVEN_CONFIG/settings.xml
   fi
 }
 
