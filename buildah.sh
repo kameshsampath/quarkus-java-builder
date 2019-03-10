@@ -26,14 +26,12 @@ cp target/*-runner  $appFS/deployment/application
 chmod +x $appFS/deployment/application
 
 # Add entry  point for the application
-buildah config --entrypoint $appFS/deployment/application $containerID
+buildah config --entrypoint /deployment/application $containerID
 buildah config --cmd "['-Dquarkus.http.host=0.0.0.0']" $containerID
 
 IMAGEID=$(buildah commit $containerID $DESTINATION_NAME)
 
 echo "Succesfully committed $DESTINATION_NAME with image id $IMAGEID"
 
-# Push the image to default regisry 
-# TODO -  how to find the default registry 
-#  
-podman push $IMAGEID docker-daemon:$DESTINATION_NAME
+# Push the image to regisry 
+buildah push --tls-verify=false $IMAGEID $DESTINATION_NAME
