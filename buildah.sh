@@ -13,7 +13,7 @@ cd $WORK_DIR
 mvn ${MVN_CMD_ARGS:-clean -DskipTests install -Pnative}
 
 # define the container base image
-containerID=$(buildah from registry.fedoraproject.org/fedora-minimal)
+containerID=$(buildah from registry.access.redhat.com/ubi7-dev-preview/ubi-minimal)
 
 # mount the container root FS
 appFS=$(buildah mount $containerID)
