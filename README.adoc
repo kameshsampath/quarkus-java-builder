@@ -1,3 +1,147 @@
 = Quarkus Java Builder
+:experimental:
+
+The container builder image that can be used to build  https://quarkus.io[QuarkusIO] applications. 
+
+The image is baked in with the following tools:
+
+ * https://maven.apache.org[Apache Maven 3.6.0]
+ * http://www.graalvm.org[Graal VM 1.0.0-rc12]
+ * https://buildah.io[Buildah]
+ * https://podman.io/Podman[Podman]
 
 == Using the image 
+
+Docker pull `docker pull quay.io/rhdevelopers/quarkus-java-builder`
+
+== Configuration 
+
+[#en-vars]
+[cols="2,3,1",options="header"]
+.Environment Variables
+|===
+
+| Environment Variable | Use | Default
+
+| BUILDAH_SCRIPT
+| Builds the application container image using Quarkus native image
+| /usr/loca/bin/buildah.sh
+
+| WORK_DIR
+| The directory that contains sources to build
+| /project 
+
+| MVN_CMD_ARGS
+| The maven goals that need to run 
+| mvn package -Pnative 
+
+| DESTINATION_NAME
+| The fully qualified container image name, where the built image will be pushed e.g. docker.io/myrepo/myapp
+| 
+
+| MAVEN_MIRROR_URL
+| The maven mirror url, typically the repository manager URL to make builders faster
+| 
+
+| HTTP_PROXY_HOST
+| The HTTP proxy host to use with Maven
+| 
+
+| HTTP_PROXY_PORT
+| The HTTP proxy port to use with Maven
+| 
+
+| HTTP_PROXY_USERNAME
+| The HTTP proxy port to use with Maven
+| 
+
+| HTTP_PROXY_PASSWORD
+| The HTTP proxy password to use with Maven
+| 
+
+| HTTP_PROXY_NONPROXYHOSTS
+| The HTTP hosts to which proxy does not apply
+| 
+
+|===
+
+The builder image has a default `buildah.sh` script that runs a https://buildah.io[buildah] build to package the https://quarkus.io[QuarkusIO] application. The users can override this script by mounting their own `buildah.sh` script by setting the environment variable `BUILDAH_SCRIPT`.
+
+== Example Application 
+
+You can download the sample source code from https://github.com/redhat-developer-demos/knative-tutorial-greeter[knative-tutorial-greeter]
+
+[source,bash]
+----
+git clone https://github.com/redhat-developer-demos/knative-tutorial-greeter 
+----
+
+Lets call the cloned folder as **$PROJECT_HOME**
+
+=== Minikube
+
+https://kubernetes.io/docs/setup/minikube/[Minikube] is single node Kubernetes cluster that can be used for development purposes. You can download and install https://kubernetes.io/docs/setup/minikube/[Minikube] to test the builder.
+
+As of now we dont have a standard way to build and deploy Kubernetes applications from sources. For the sake of demoing this builder we will will use https://github.com/knative/build[Knative Build], the following command will start minikube locally and setup Knative build in it.
+
+==== Deploy Knative Build  
+
+[source,bash]
+----
+$PROJECT_HOME/example/minikube-start.sh
+----
+
+==== Deploy Quarkus application 
+
+[source,bash]
+----
+cd $PROJECT_HOME/java/quarkus
+----
+
+Before the knative resources are deployed, we need to run the following maven command to configure the build to ones need:
+
+[source,bash]
+----
+# This will generate the needed knative resources in target/knative directory
+mvn -Dcontainer.registry.url='https://index.docker.io' \#<1>
+    -Dcontainer.registry.user='demo' \#<2>
+    -Dcontainer.registry.password='password!' \#<3>
+    -Dgit.source.revision='master' \#<4>
+    -Dgit.source.repo.url='https://github.com/kameshsampath/knative-tutorial-greeter.git' \#<5>
+    -Dapp.container.image='docker.io/demo/quarkus-greeter' \#<6>
+    clean package
+----
+
+<1> The docker hub registry url 
+<2> The docker hub user name
+<3> The docker hub user password
+<4> The Git source revision 
+<5> The Git source repository url
+<6> The application container image name, maps to `DESTINATION_NAME` in <<en-vars>>
+
+
+[source,bash]
+----
+# apply the resources 
+kubectl apply -f target/knative # <1>
+----
+
+This will create all the needed Knative resources that will run the Knative build for building the Quarkus application.
+
+[NOTE]
+====
+* Build and deploy will take time at least for the first build as it warms the .m2 cache and downloads the base images
+
+Watch the status of the application using and use CTRL + C when you want to terminate the watch
+
+[source,bash]
+----
+kubectl get pods -w 
+----
+====
+
+=== Kubernetes Deployment
+**TODO**
+
+=== Docker for Mac
+**TODO**
