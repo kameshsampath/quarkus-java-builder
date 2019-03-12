@@ -1,6 +1,8 @@
 = Quarkus Java Builder
 :experimental:
 
+image:https://quay.io/repository/rhdevelopers/quarkus-java-builder/status["Docker Repository on Quay", link="https://quay.io/repository/rhdevelopers/quarkus-java-builder"]
+
 The container builder image that can be used to build  https://quarkus.io[QuarkusIO] applications. 
 
 The image is baked in with the following tools:
